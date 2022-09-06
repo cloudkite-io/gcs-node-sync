@@ -2,7 +2,7 @@ This application synchronizes a GCS bucket to a local folder.
 
 ## How it works
 The application starts off by running [gsutil rsync](https://cloud.google.com/storage/docs/gsutil/commands/rsync) to get all the contents of a GCS bucket.  
-The application then creates a Pub/Sub subscription attached to the topic (where notifications from GCS are sent to) and indefinitely listens to it for events while writing/deleting files based on the event type.
+The application then creates a Pub/Sub subscription attached to the provided topic (where notifications from GCS are sent to) and indefinitely listens to it for events while writing/deleting files based on the event type.
 
 ## Prerequisites
 1. Activate the Google Cloud Pub/Sub API, if you have not already done so.
