@@ -19,10 +19,11 @@ def update_files(message, bucket, source_bucket_path, destination_folder, logger
     file_path = f"{destination_folder}/{object_id}"
     if source_bucket_path:
         if object_id.startswith(source_bucket_path):
-            file_path = f"{destination_folder}/{object_id}".replace(f"{source_bucket_path}/", "")
+            file_path = f"{destination_folder}/{object_id}".replace(
+                f"{source_bucket_path}/", "")
         else:
             update_file = False
-        
+
     logger.debug(file_path, update_file)
     if update_file:
         try:
@@ -30,7 +31,7 @@ def update_files(message, bucket, source_bucket_path, destination_folder, logger
             if not os.path.exists(file_dir):
                 pathlib.Path(
                     file_dir).mkdir(parents=True, exist_ok=True)
-            if event_type == "OBJECT_DELETE" and  ("overwrittenByGeneration" not in attributes):
+            if event_type == "OBJECT_DELETE" and ("overwrittenByGeneration" not in attributes):
                 logger.debug(f"Deleted {file_path}")
                 os.remove(file_path)
             elif event_type == "OBJECT_FINALIZE":
@@ -50,22 +51,23 @@ def poll_notifications(project_id, topic_id, source_bucket, source_bucket_path, 
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(project_id, topic_id)
 
-
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(
         project_id, subscription_id
     )
 
-
     storage_client = storage.Client(project_id)
     bucket = storage_client.get_bucket(source_bucket)
 
     def callback(message):
-        update_files(message, bucket, source_bucket_path, destination_folder, logger)
+        update_files(message, bucket, source_bucket_path,
+                     destination_folder, logger)
         message.ack()
     try:
+        expiration_policy = pubsub_v1.types.ExpirationPolicy(
+            ttl=pubsub_v1.types.duration_pb2.Duration(seconds=86400))
         subscriber.create_subscription(
-            name=subscription_path, topic=topic_path)
+            request={"expiration_policy": expiration_policy, "name": subscription_path, "topic": topic_path})
         logger.info(
             f"Created a subscription {subscription_path} in topic {topic_path}")
     except AlreadyExists:

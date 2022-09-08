@@ -36,7 +36,8 @@ gcr.io/cloudkite-public/gcs-node-sync:latest
 ```
 
 ### Deleting the Pub/Sub subscription.
-The `app/delete_pubsub_subscription.py` is a small Python script which deletes the Pub/Sub subscription created by the `app/main.py` script. It requires only two arguments which can be passed as environment variables:
+The Pub/Sub subscriptions created by this script are set to expire after 1 day of inactivity (subscriber activities include open connections, active pulls, or successful pushes).  
+The `app/delete_pubsub_subscription.py` is a small Python script which can be used to delete the Pub/Sub subscription created by the `app/main.py` script. It requires only two arguments which can be passed as environment variables:
 
 | INPUT PARAMETER NAME                                  | DESCRIPTION                                                                                          |
 | ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
