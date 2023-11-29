@@ -16,15 +16,18 @@ def update_files(message, bucket, source_bucket_path, destination_folder, logger
     object_id = attributes["objectId"]
 
     update_file = True
+    logger.debug(f"Received object with id {object_id}")
+    logger.debug(f"Source bucket path is {source_bucket_path}")
     file_path = f"{destination_folder}/{object_id}"
     if source_bucket_path:
+        source_bucket_path = source_bucket_path.rstrip('/')
         if object_id.startswith(source_bucket_path):
             file_path = f"{destination_folder}/{object_id}".replace(
                 f"{source_bucket_path}/", "")
         else:
             update_file = False
 
-    logger.debug(file_path, update_file)
+    logger.info(f"Update = {update_file}. {event_type} -> File path: {file_path}.")
     if update_file:
         try:
             file_dir = ("/").join(file_path.split("/")[:-1])
@@ -40,7 +43,7 @@ def update_files(message, bucket, source_bucket_path, destination_folder, logger
                 logger.debug(f"Added {file_path}")
                 blob.download_to_filename(file_path)
         except Exception as err:
-            logger.error("Error occured: ", err)
+            logger.error(f"Error occured: {err}")
 
 
 def poll_notifications(project_id, topic_id, source_bucket, source_bucket_path, destination_folder, logger):
