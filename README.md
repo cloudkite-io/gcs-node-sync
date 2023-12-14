@@ -24,7 +24,7 @@ The input parameters may also be passed as environment variables as shown in the
 | GCLOUD_PUBSUB_TOPIC_ID                    | The ID of the Pub/Sub topic that receives notifications of changes to your GCS bucket | Yes | None |
 | GCLOUD_BUCKET_NAME                                 | The name of the GCS Bucket to sync data from | Yes | None |
 | GCLOUD_BUCKET_PATH                                 | The path to a specific folder in your GCS Bucket that you'd like to sync data from (Optional) | No | / |
-| GCLOUD_DESTINATION_FOLDER                          | The absolute local path where the GCS bucket's contents will be stored (Optional) | No | /tmp/buckets/  |
+| GCLOUD_DESTINATION_FOLDER                          | The absolute local path where the GCS bucket's contents will be stored (Optional) | No | /var/tmp/buckets/  |
 
 A `sample.env` file is provided in the root folder to be used as a template for the environment variables.
 

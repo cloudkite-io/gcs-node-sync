@@ -54,7 +54,7 @@ if __name__ == '__main__':
     if args.destination_folder:
         destination_folder = args.destination_folder.rstrip('/')
     else:
-        destination_folder = f"/tmp/buckets/{args.source_bucket}"
+        destination_folder = f"/var/tmp/buckets/{args.source_bucket}"
     
     if not os.path.exists(destination_folder):
         pathlib.Path(
@@ -63,7 +63,7 @@ if __name__ == '__main__':
     logger.info(f"Saving GCS bucket {bucket_path} to {destination_folder}")
 
     rsync_output = exec_shell_command(
-        ['gsutil', '-m', 'rsync', '-d', '-r', bucket_path, destination_folder]
+        ['time', 'gsutil', '-m', 'rsync', '-d', '-r', bucket_path, destination_folder]
     )
     
     # TO-DO: Write to a file after successfull file sync
