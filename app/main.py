@@ -63,7 +63,7 @@ if __name__ == '__main__':
     logger.info(f"Saving GCS bucket {bucket_path} to {destination_folder}")
 
     rsync_output = exec_shell_command(
-        ['time', 'gsutil', '-m', 'rsync', '-d', '-r', bucket_path, destination_folder]
+        ['time', 'gsutil', '-m', 'cp', '-r', bucket_path, destination_folder]
     )
     
     # TO-DO: Write to a file after successfull file sync
