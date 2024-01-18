@@ -37,6 +37,9 @@ def update_files(message, bucket, source_bucket_path, destination_folder, logger
             if event_type == "OBJECT_DELETE" and ("overwrittenByGeneration" not in attributes):
                 logger.debug(f"Deleted {file_path}")
                 os.remove(file_path)
+            elif event_type == "OBJECT_ARCHIVE" and ("overwrittenByGeneration" not in attributes):
+                logger.debug(f"Deleted {file_path}")
+                os.remove(file_path)
             elif event_type == "OBJECT_FINALIZE":
                 # Download the file to a destination
                 blob = bucket.blob(object_id)
