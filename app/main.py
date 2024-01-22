@@ -45,11 +45,11 @@ if __name__ == '__main__':
         exit(parser.print_help())
       
     if (args.source_bucket_path):
-        source_bucket_path = args.source_bucket_path.lstrip('/')
-        bucket_path = f"gs://{args.source_bucket}/{source_bucket_path}"
+        source_bucket_path = args.source_bucket_path.strip('/')
+        bucket_path = f"gs://{args.source_bucket}/{source_bucket_path}/*"
     else:
         source_bucket_path = None
-        bucket_path = f"gs://{args.source_bucket}"
+        bucket_path = f"gs://{args.source_bucket}/*"
 
     if args.destination_folder:
         destination_folder = args.destination_folder.rstrip('/')
