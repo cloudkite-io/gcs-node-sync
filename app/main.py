@@ -30,7 +30,7 @@ if __name__ == '__main__':
     parser.add_argument(
         "--destination_folder", required=False, help="The absolute local path where the GCS bucket's contents will be stored",
         default=os.getenv("GCLOUD_DESTINATION_FOLDER")
-    )   
+    )
 
     logger = logging.getLogger(__name__)
 
@@ -43,7 +43,7 @@ if __name__ == '__main__':
 
     if (not args.project) or (not args.source_bucket) or (not args.pubsub_topic):
         exit(parser.print_help())
-      
+
     if (args.source_bucket_path):
         source_bucket_path = args.source_bucket_path.strip('/')
         bucket_path = f"gs://{args.source_bucket}/{source_bucket_path}/*"
@@ -55,17 +55,17 @@ if __name__ == '__main__':
         destination_folder = args.destination_folder.rstrip('/')
     else:
         destination_folder = f"/var/tmp/buckets/{args.source_bucket}"
-    
+
     if not os.path.exists(destination_folder):
         pathlib.Path(
             destination_folder).mkdir(parents=True, exist_ok=True)
-    
+
     logger.info(f"Saving GCS bucket {bucket_path} to {destination_folder}")
 
     cp_output = exec_shell_command(
-        ['time', 'gsutil', '-m', 'cp', '-r', bucket_path, destination_folder]
+        ['time', 'gcloud', 'storage', 'cp', '-r', bucket_path, destination_folder]
     )
-    
+
     # TO-DO: Write to a file after successfull file sync
     poll_notifications(args.project, args.pubsub_topic, args.source_bucket,
                        source_bucket_path, destination_folder, logger)
