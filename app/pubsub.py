@@ -9,7 +9,7 @@ from google.cloud import storage
 from google.api_core.exceptions import AlreadyExists
 
 
-def update_files(message, bucket, source_bucket_path, destination_folder, logger):
+def update_files(message, bucket, source_bucket_path, destination_folder, logger, verbose):
     attributes = message.attributes
 
     event_type = attributes["eventType"]
@@ -27,7 +27,8 @@ def update_files(message, bucket, source_bucket_path, destination_folder, logger
         else:
             update_file = False
 
-    logger.info(f"Update = {update_file}. {event_type} -> File path: {file_path}.")
+    if verbose:
+        logger.info(f"Update = {update_file}. {event_type} -> File path: {file_path}.")
     if update_file:
         try:
             file_dir = ("/").join(file_path.split("/")[:-1])
@@ -49,7 +50,7 @@ def update_files(message, bucket, source_bucket_path, destination_folder, logger
             logger.error(f"Error occured: {err}")
 
 
-def poll_notifications(project_id, topic_id, source_bucket, source_bucket_path, destination_folder, logger):
+def poll_notifications(project_id, topic_id, source_bucket, source_bucket_path, destination_folder, logger, verbose):
     """Polls a Cloud Pub/Sub subscription for new GCS events to update local files."""
     host_name = os.uname()[1]
     subscription_id = f"{topic_id}-{host_name}"
@@ -67,7 +68,7 @@ def poll_notifications(project_id, topic_id, source_bucket, source_bucket_path, 
 
     def callback(message):
         update_files(message, bucket, source_bucket_path,
-                     destination_folder, logger)
+                     destination_folder, logger, verbose)
         message.ack()
     try:
         expiration_policy = pubsub_v1.types.ExpirationPolicy(

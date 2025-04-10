@@ -31,6 +31,12 @@ if __name__ == '__main__':
         "--destination_folder", required=False, help="The absolute local path where the GCS bucket's contents will be stored",
         default=os.getenv("GCLOUD_DESTINATION_FOLDER")
     )
+    parser.add_argument(
+        "--verbose",
+        default=os.getenv("VERBOSE", "false").lower() == "true",
+        action="store_true",
+        help="Enable verbose logging output"
+    )
 
     logger = logging.getLogger(__name__)
 
@@ -68,4 +74,4 @@ if __name__ == '__main__':
 
     # TO-DO: Write to a file after successfull file sync
     poll_notifications(args.project, args.pubsub_topic, args.source_bucket,
-                       source_bucket_path, destination_folder, logger)
+                       source_bucket_path, destination_folder, logger, args.verbose)
